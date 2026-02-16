@@ -1,0 +1,853 @@
+Мы доработали адаптивность: сайт идеально подстраивается под ПК, планшеты и телефоны. На мобильных устройствах шапка компактно сворачивается, карточки услуг и преимущества перестраиваются в одну колонку, шрифты становятся чуть меньше, отступы оптимизированы. Фоновый паттерн не мешает чтению. Все элементы выглядят современно и стильно в чёрно-красной гамме.
+
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>HayPC | чёрный / красный · Компьютеры, ремонт, аксессуары</title>
+    <!-- Шрифт и иконки -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #0c0c0c;
+            color: #e5e5e5;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Фоновый паттерн — комплектующие (иконки) */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.06;
+            background-image: 
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff0000'%3E%3Cpath d='M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5s-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.79 2.59 5.01 4 8.19 4s6.4-1.41 8.19-4H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8z'/%3E%3C/svg%3E"),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff0000'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z'/%3E%3C/svg%3E"),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff0000'%3E%3Cpath d='M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 2h6v2h-6V6zm0 4h6v2h-6v-2zm-6 0h4v2H6v-2zm10 4h-4v-2h4v2z'/%3E%3C/svg%3E"),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff0000'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 70px 70px, 90px 90px, 110px 110px, 130px 130px;
+            background-position: 10% 20%, 80% 40%, 30% 80%, 70% 10%;
+            mix-blend-mode: multiply;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Шапка */
+        .header {
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(8px);
+            border-bottom: 2px solid #b91c1c;
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(145deg, #fafafa, #b91c1c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .lang-switch {
+            display: flex;
+            gap: 8px;
+            background: #1f1f1f;
+            padding: 6px 12px;
+            border-radius: 40px;
+            border: 1px solid #b91c1c;
+        }
+
+        .lang-btn {
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 700;
+            padding: 6px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #aaa;
+        }
+
+        .lang-btn.active {
+            background: #b91c1c;
+            color: white;
+            box-shadow: 0 0 12px #b91c1c;
+        }
+
+        /* Типографика */
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            letter-spacing: -0.01em;
+            border-left: 8px solid #b91c1c;
+            padding-left: 24px;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #b0b0b0;
+        }
+
+        .highlight {
+            color: #b91c1c;
+            font-weight: 700;
+        }
+
+        /* Hero секция */
+        .hero {
+            padding: 100px 0;
+            background: radial-gradient(circle at 10% 20%, rgba(185,28,28,0.15), transparent 40%);
+        }
+
+        .hero .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero h1 span {
+            color: #b91c1c;
+            display: block;
+            font-size: 4rem;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 500px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 50px;
+            margin-top: 40px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #b91c1c;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #b91c1c;
+            color: white;
+            font-weight: 700;
+            padding: 14px 40px;
+            border-radius: 60px;
+            text-decoration: none;
+            margin-top: 20px;
+            border: 2px solid #b91c1c;
+            transition: 0.2s;
+            box-shadow: 0 8px 20px rgba(185,28,28,0.4);
+        }
+
+        .btn:hover {
+            background: transparent;
+            color: #b91c1c;
+        }
+
+        /* Карточки услуг */
+        .services {
+            padding: 100px 0;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 32px;
+            margin-top: 50px;
+        }
+
+        .service-card {
+            background: rgba(20, 20, 20, 0.9);
+            backdrop-filter: blur(4px);
+            padding: 40px 30px;
+            border-radius: 30px;
+            border: 1px solid #333;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: #b91c1c;
+            transition: 0.3s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            border-color: #b91c1c;
+            box-shadow: 0 20px 30px -10px rgba(185,28,28,0.5);
+        }
+
+        .service-icon {
+            font-size: 3.5rem;
+            color: #b91c1c;
+            margin-bottom: 20px;
+        }
+
+        .service-title {
+            font-size: 1.9rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .service-desc {
+            color: #aaa;
+            margin-bottom: 20px;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .feature-list li {
+            margin-bottom: 8px;
+            color: #ccc;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-list i {
+            color: #b91c1c;
+            width: 20px;
+        }
+
+        /* Гарантия */
+        .warranty {
+            background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
+            padding: 80px 0;
+            border-top: 2px solid #b91c1c;
+            border-bottom: 2px solid #b91c1c;
+            margin: 40px 0;
+        }
+
+        .warranty-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .warranty-icon {
+            font-size: 6rem;
+            color: #b91c1c;
+        }
+
+        .warranty h2 {
+            border: none;
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #b91c1c;
+            color: white;
+            font-weight: 800;
+            padding: 12px 40px;
+            border-radius: 60px;
+            font-size: 1.4rem;
+            margin-top: 20px;
+            box-shadow: 0 0 20px #b91c1c;
+        }
+
+        /* Преимущества */
+        .features {
+            padding: 80px 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .feature-item {
+            background: #151515;
+            padding: 30px;
+            border-radius: 24px;
+            border: 1px solid #333;
+            text-align: center;
+        }
+
+        .feature-item i {
+            font-size: 2.5rem;
+            color: #b91c1c;
+            margin-bottom: 20px;
+        }
+
+        /* Контакты */
+        .contact {
+            padding: 80px 0;
+            background: #0a0a0a;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            background: #1c1c1c;
+            padding: 20px 40px;
+            border-radius: 60px;
+            border: 1px solid #b91c1c;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 1.2rem;
+        }
+
+        .contact-item i {
+            font-size: 2rem;
+            color: #b91c1c;
+        }
+
+        /* Футер */
+        .footer {
+            background: #050505;
+            padding: 40px 0;
+            border-top: 1px solid #b91c1c;
+            text-align: center;
+            color: #777;
+        }
+
+        /* ========== АДАПТИВНОСТЬ ========== */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 0 32px;
+            }
+            h1 {
+                font-size: 3rem;
+            }
+            h2 {
+                font-size: 2.4rem;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .hero .container {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 40px;
+            }
+            .hero p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .hero-stats {
+                justify-content: center;
+            }
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 24px;
+            }
+            h1 {
+                font-size: 2.6rem;
+            }
+            h1 span {
+                font-size: 3rem !important;
+            }
+            h2 {
+                font-size: 2.2rem;
+                padding-left: 16px;
+                border-left-width: 6px;
+            }
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            .service-card {
+                padding: 30px 20px;
+            }
+            .service-title {
+                font-size: 1.6rem;
+            }
+            .contact-item {
+                padding: 16px 24px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .header .container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .lang-switch {
+                align-self: center;
+            }
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .hero-stats {
+                gap: 30px;
+                flex-wrap: wrap;
+            }
+            .stat-number {
+                font-size: 2.2rem;
+            }
+            .contact-info {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+            .contact-item {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 16px;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+            h1 span {
+                font-size: 2.6rem !important;
+            }
+            h2 {
+                font-size: 1.8rem;
+            }
+            .btn {
+                padding: 12px 30px;
+                font-size: 0.9rem;
+            }
+            .service-card {
+                padding: 25px 16px;
+            }
+            .warranty-icon {
+                font-size: 4rem;
+            }
+            .badge {
+                font-size: 1.2rem;
+                padding: 10px 24px;
+            }
+            .footer {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* для очень маленьких высот */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .hero {
+                padding: 50px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">HAYPC</div>
+            <div class="lang-switch">
+                <button class="lang-btn active" data-lang="am">AM</button>
+                <button class="lang-btn" data-lang="ru">RU</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero -->
+        <section class="hero">
+            <div class="container">
+                <div>
+                    <h1><span data-i18n="hero_title1">HAYPC</span> <span data-i18n="hero_title2">КРУЧЕ, ЧЕМ ТЕХНИКА</span></h1>
+                    <p data-i18n="hero_sub">Продажа, ремонт, кастомные сборки, аксессуары и ЖЕЛЕЗНАЯ гарантия от 6 месяцев.</p>
+                    <a href="#" class="btn" data-i18n="hero_btn">КОНСУЛЬТАЦИЯ</a>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">7+</div>
+                            <div data-i18n="stat_years">лет опыта</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">3000+</div>
+                            <div data-i18n="stat_clients">клиентов</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center;">
+                    <!-- Красная неоновая заглушка -->
+                    <div style="background: #1a1a1a; border-radius: 40px; padding: 20px; border: 2px solid #b91c1c; box-shadow: 0 0 50px #b91c1c33;">
+                        <i class="fas fa-computer" style="font-size: 12rem; color: #b91c1c; opacity: 0.8;"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Услуги (6 пунктов) -->
+        <section class="services">
+            <div class="container">
+                <h2 data-i18n="services_title">ЧТО МЫ ДЕЛАЕМ</h2>
+                <div class="services-grid">
+                    <!-- 1. Продажа компьютеров -->
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-desktop"></i></div>
+                        <div class="service-title" data-i18n="s1_title">Продажа ПК</div>
+                        <div class="service-desc" data-i18n="s1_desc">Готовые системные блоки и ноутбуки для любых задач.</div>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="s1_f1">Офисные / игровые / рабочие станции</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="s1_f2">Самые свежие комплектующие</span></li>
+                        </ul>
+                    </div>
+                    <!-- 2. Ремонт -->
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-tools"></i></div>
+                        <div class="service-title" data-i18n="s2_title">Ремонт</div>
+                        <div class="service-desc" data-i18n="s2_desc">Компьютеры, ноутбуки, телефоны — быстро и качественно.</div>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="s2_f1">Замена деталей, чистка, пайка</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="s2_f2">Диагностика за 0 ₽ при ремонте</span></li>
+                        </ul>
+                    </div>
+                    <!-- 3. Кастомные сборки -->
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-microchip"></i></div>
+                        <div class="service-title" data-i18n="s3_title">Кастомные ПК</div>
+                        <div class="service-desc" data-i18n="s3_desc">Соберём компьютер под ваши требования и бюджет.</div>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="s3_f1">Уникальный дизайн / кабель-менеджмент</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="s3_f2">Водяное охлаждение, разгон</span></li>
+                        </ul>
+                    </div>
+                    <!-- 4. Техника (комплектующие) -->
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-memory"></i></div>
+                        <div class="service-title" data-i18n="s4_title">Комплектующие</div>
+                        <div class="service-desc" data-i18n="s4_desc">Процессоры, видеокарты, материнки, БП и всё для апгрейда.</div>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="s4_f1">Только оригинальные модели</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="s4_f2">Помощь в подборе совместимости</span></li>
+                        </ul>
+                    </div>
+                    <!-- 5. Аксессуары -->
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-headphones-alt"></i></div>
+                        <div class="service-title" data-i18n="s5_title">Аксессуары</div>
+                        <div class="service-desc" data-i18n="s5_desc">Мышки, клавиатуры, коврики, кабели, чехлы и многое другое.</div>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="s5_f1">Игровые и офисные серии</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="s5_f2">Бренды: Logitech, Razer, HyperX и др.</span></li>
+                        </ul>
+                    </div>
+                    <!-- 6. Супер-гарантия (от 6 мес) -->
+                    <div class="service-card" style="border: 2px solid #b91c1c;">
+                        <div class="service-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="service-title" data-i18n="s6_title">Гарантия 6+ мес</div>
+                        <div class="service-desc" data-i18n="s6_desc">На все услуги и товары — официальная гарантия.</div>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="s6_f1">На ремонт — от 6 до 24 мес</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-i18n="s6_f2">На технику — до 3 лет</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Отдельный мощный блок про гарантию -->
+        <section class="warranty">
+            <div class="container warranty-content">
+                <div class="warranty-icon"><i class="fas fa-medal"></i></div>
+                <h2 data-i18n="warranty_main">ГАРАНТИЯ — НАШЕ СЛОВО</h2>
+                <p data-i18n="warranty_text" style="font-size: 1.2rem;">Минимум 6 месяцев гарантии на любую услугу или товар. Для кастомных сборок и некоторых категорий — до 2 лет. Мы уверены в качестве, поэтому подписываем официальные документы.</p>
+                <div class="badge" data-i18n="warranty_badge">6+ МЕСЯЦЕВ</div>
+            </div>
+        </section>
+
+        <!-- Преимущества (детали) -->
+        <section class="features">
+            <div class="container">
+                <h2 data-i18n="why_title">ПОЧЕМУ HAYPC</h2>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <i class="fas fa-bolt"></i>
+                        <h3 data-i18n="why1_title">Скорость</h3>
+                        <p data-i18n="why1_desc">Ремонт за 1 день, сборка за 2 дня, доставка по городу за 3 часа.</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-user-tie"></i>
+                        <h3 data-i18n="why2_title">Опыт 7+ лет</h3>
+                        <p data-i18n="why2_desc">Инженеры с профильным образованием и сотнями собранных ПК.</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-file-signature"></i>
+                        <h3 data-i18n="why3_title">Прозрачность</h3>
+                        <p data-i18n="why3_desc">Честная смета, никаких скрытых платежей, только официальная гарантия.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Контакты -->
+        <section class="contact">
+            <div class="container">
+                <h2 data-i18n="contact_title">СВЯЗЬ</h2>
+                <div class="contact-info">
+                    <div class="contact-item"><i class="fas fa-map-marker-alt"></i> <span data-i18n="address">Ереван, ул. Баграмяна 22</span></div>
+                    <div class="contact-item"><i class="fas fa-phone-alt"></i> <span>+374 77 123 456</span></div>
+                    <div class="contact-item"><i class="fas fa-envelope"></i> <span>info@haypc.am</span></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2025 HayPC | <span data-i18n="footer">Все права защищены. Железо в крови.</span></p>
+        </div>
+    </footer>
+
+    <script>
+        (function() {
+            const translations = {
+                am: {
+                    hero_title1: 'HAYPC',
+                    hero_title2: 'ՏԵԽՆԻԿԱՅԻՑ ԱՎԵԼԻՆ',
+                    hero_sub: 'Վաճառք, վերանորոգում, պատվերով հավաքում, աքսեսուարներ և ԵՐԱՇԽԻՔ 6 ամսից',
+                    hero_btn: 'ԽՈՐՀՐԴԱՏՎՈՒԹՅՈՒՆ',
+                    stat_years: 'տարվա փորձ',
+                    stat_clients: 'հաճախորդ',
+                    services_title: 'ԻՆՉ ԵՆՔ ԱՌԱՋԱՐԿՈՒՄ',
+                    s1_title: 'Համակարգիչների վաճառք',
+                    s1_desc: 'Պատրաստի համակարգիչներ ցանկացած նպատակի համար:',
+                    s1_f1: 'Գրասենյակային / խաղային / աշխատանքային',
+                    s1_f2: 'Թարմ բաղադրիչներ',
+                    s2_title: 'Վերանորոգում',
+                    s2_desc: 'Համակարգիչներ, նոթբուքեր, հեռախոսներ',
+                    s2_f1: 'Դետալների փոխարինում, մաքրում, զոդում',
+                    s2_f2: 'Ախտորոշումը անվճար է վերանորոգման դեպքում',
+                    s3_title: 'Պատվերով համակարգիչներ',
+                    s3_desc: 'Հավաքում ենք ձեր պահանջներով և բյուջեով',
+                    s3_f1: 'Յուրահատուկ դիզայն / մալուխների կառավարում',
+                    s3_f2: 'Ջրային հովացում, օվերքլոկինգ',
+                    s4_title: 'Բաղադրիչներ',
+                    s4_desc: 'Պրոցեսորներ, վիդեոքարտեր, մայրական տախտակներ',
+                    s4_f1: 'Միայն օրիգինալ մոդելներ',
+                    s4_f2: 'Համատեղելիության ընտրություն',
+                    s5_title: 'Աքսեսուարներ',
+                    s5_desc: 'Մկներ, ստեղնաշարեր, պայուսակներ, մալուխներ',
+                    s5_f1: 'Խաղային և գրասենյակային շարքեր',
+                    s5_f2: 'Logitech, Razer, HyperX և այլն',
+                    s6_title: 'Երաշխիք 6+ ամիս',
+                    s6_desc: 'Պաշտոնական երաշխիք բոլոր ծառայությունների և ապրանքների վրա',
+                    s6_f1: 'Վերանորոգման վրա՝ 6-24 ամիս',
+                    s6_f2: 'Տեխնիկայի վրա՝ մինչև 3 տարի',
+                    warranty_main: 'ԵՐԱՇԽԻՔԸ ՄԵՐ ԽՈՍՔՆ Է',
+                    warranty_text: 'Նվազագույնը 6 ամիս երաշխիք ցանկացած ծառայության կամ ապրանքի համար: Պատվերով հավաքումների համար՝ մինչև 2 տարի:',
+                    warranty_badge: '6+ ԱՄԻՍ',
+                    why_title: 'ԻՆՉՈՒ HAYPC',
+                    why1_title: 'Արագություն',
+                    why1_desc: 'Վերանորոգում 1 օրում, հավաքում 2 օրում, առաքում 3 ժամում',
+                    why2_title: '7+ տարվա փորձ',
+                    why2_desc: 'Ինժեներներ համապատասխան կրթությամբ',
+                    why3_title: 'Թափանցիկություն',
+                    why3_desc: 'Ազնիվ նախահաշիվ, թաքնված վճարներ չկան',
+                    contact_title: 'ԿԱՊ',
+                    address: 'Երևան, Բաղրամյան 22',
+                    footer: 'Բոլոր իրավունքները պաշտպանված են:'
+                },
+                ru: {
+                    hero_title1: 'HAYPC',
+                    hero_title2: 'КРУЧЕ, ЧЕМ ТЕХНИКА',
+                    hero_sub: 'Продажа, ремонт, кастомные сборки, аксессуары и ЖЕЛЕЗНАЯ гарантия от 6 месяцев.',
+                    hero_btn: 'КОНСУЛЬТАЦИЯ',
+                    stat_years: 'лет опыта',
+                    stat_clients: 'клиентов',
+                    services_title: 'ЧТО МЫ ДЕЛАЕМ',
+                    s1_title: 'Продажа ПК',
+                    s1_desc: 'Готовые системные блоки и ноутбуки для любых задач.',
+                    s1_f1: 'Офисные / игровые / рабочие станции',
+                    s1_f2: 'Самые свежие комплектующие',
+                    s2_title: 'Ремонт',
+                    s2_desc: 'Компьютеры, ноутбуки, телефоны — быстро и качественно.',
+                    s2_f1: 'Замена деталей, чистка, пайка',
+                    s2_f2: 'Диагностика за 0 ₽ при ремонте',
+                    s3_title: 'Кастомные ПК',
+                    s3_desc: 'Соберём компьютер под ваши требования и бюджет.',
+                    s3_f1: 'Уникальный дизайн / кабель-менеджмент',
+                    s3_f2: 'Водяное охлаждение, разгон',
+                    s4_title: 'Комплектующие',
+                    s4_desc: 'Процессоры, видеокарты, материнки, БП и всё для апгрейда.',
+                    s4_f1: 'Только оригинальные модели',
+                    s4_f2: 'Помощь в подборе совместимости',
+                    s5_title: 'Аксессуары',
+                    s5_desc: 'Мышки, клавиатуры, коврики, кабели, чехлы и многое другое.',
+                    s5_f1: 'Игровые и офисные серии',
+                    s5_f2: 'Бренды: Logitech, Razer, HyperX и др.',
+                    s6_title: 'Гарантия 6+ мес',
+                    s6_desc: 'На все услуги и товары — официальная гарантия.',
+                    s6_f1: 'На ремонт — от 6 до 24 мес',
+                    s6_f2: 'На технику — до 3 лет',
+                    warranty_main: 'ГАРАНТИЯ — НАШЕ СЛОВО',
+                    warranty_text: 'Минимум 6 месяцев гарантии на любую услугу или товар. Для кастомных сборок и некоторых категорий — до 2 лет.',
+                    warranty_badge: '6+ МЕСЯЦЕВ',
+                    why_title: 'ПОЧЕМУ HAYPC',
+                    why1_title: 'Скорость',
+                    why1_desc: 'Ремонт за 1 день, сборка за 2 дня, доставка по городу за 3 часа.',
+                    why2_title: 'Опыт 7+ лет',
+                    why2_desc: 'Инженеры с профильным образованием и сотнями собранных ПК.',
+                    why3_title: 'Прозрачность',
+                    why3_desc: 'Честная смета, никаких скрытых платежей.',
+                    contact_title: 'СВЯЗЬ',
+                    address: 'Ереван, ул. Баграмяна 22',
+                    footer: 'Все права защищены. Железо в крови.'
+                },
+                en: {
+                    hero_title1: 'HAYPC',
+                    hero_title2: 'BEYOND HARDWARE',
+                    hero_sub: 'Sales, repairs, custom builds, accessories and SOLID warranty from 6 months.',
+                    hero_btn: 'FREE CONSULT',
+                    stat_years: 'years exp',
+                    stat_clients: 'clients',
+                    services_title: 'OUR SERVICES',
+                    s1_title: 'Sell PCs',
+                    s1_desc: 'Ready-made desktops & laptops for any purpose.',
+                    s1_f1: 'Office / Gaming / Workstations',
+                    s1_f2: 'Latest-gen components',
+                    s2_title: 'Repairs',
+                    s2_desc: 'Computers, laptops, phones — fast & reliable.',
+                    s2_f1: 'Parts replacement, cleaning, soldering',
+                    s2_f2: 'Free diagnostics with repair',
+                    s3_title: 'Custom PCs',
+                    s3_desc: 'We build your dream machine.',
+                    s3_f1: 'Unique design / cable management',
+                    s3_f2: 'Water cooling, overclocking',
+                    s4_title: 'Hardware',
+                    s4_desc: 'CPUs, GPUs, motherboards, PSUs and more.',
+                    s4_f1: 'Only genuine models',
+                    s4_f2: 'Compatibility check',
+                    s5_title: 'Accessories',
+                    s5_desc: 'Mice, keyboards, mats, cables, cases.',
+                    s5_f1: 'Gaming & office series',
+                    s5_f2: 'Brands: Logitech, Razer, HyperX',
+                    s6_title: 'Warranty 6+ mo',
+                    s6_desc: 'Official warranty on all services & goods.',
+                    s6_f1: 'On repairs — 6 to 24 months',
+                    s6_f2: 'On hardware — up to 3 years',
+                    warranty_main: 'WARRANTY IS OUR WORD',
+                    warranty_text: 'Minimum 6 months warranty on any service or product. For custom builds up to 2 years.',
+                    warranty_badge: '6+ MONTHS',
+                    why_title: 'WHY HAYPC',
+                    why1_title: 'Speed',
+                    why1_desc: 'Repair in 1 day, build in 2 days, delivery in 3 hours.',
+                    why2_title: '7+ years exp',
+                    why2_desc: 'Certified engineers, hundreds of builds.',
+                    why3_title: 'Transparency',
+                    why3_desc: 'No hidden fees, honest estimates.',
+                    contact_title: 'CONTACT',
+                    address: 'Yerevan, Baghramyan 22',
+                    footer: 'All rights reserved. Hardware in blood.'
+                }
+            };
+
+            const elements = document.querySelectorAll('[data-i18n]');
+            const langBtns = document.querySelectorAll('.lang-btn');
+
+            function setLang(lang) {
+                if (!translations[lang]) return;
+                elements.forEach(el => {
+                    const key = el.dataset.i18n;
+                    if (translations[lang][key]) {
+                        el.innerHTML = translations[lang][key];
+                    }
+                });
+                langBtns.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.lang === lang);
+                });
+                localStorage.setItem('haypc_lang', lang);
+            }
+
+            langBtns.forEach(btn => {
+                btn.addEventListener('click', () => setLang(btn.dataset.lang));
+            });
+
+            const saved = localStorage.getItem('haypc_lang') || 'ru';
+            setLang(saved);
+        })();
+    </script>
+</body>
+</html>
+```
