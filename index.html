@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -24,30 +23,46 @@
             line-height: 1.6;
             overflow-x: hidden;
             position: relative;
+            min-height: 100vh;
         }
 
-        /* Фоновый паттерн — комплектующие (иконки) */
-        body::before {
-            content: '';
+        /* Контейнер для падающих компонентов */
+        .falling-components {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 0;
-            opacity: 0.06;
-            background-image: 
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff0000'%3E%3Cpath d='M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5s-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.79 2.59 5.01 4 8.19 4s6.4-1.41 8.19-4H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8z'/%3E%3C/svg%3E"),
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff0000'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z'/%3E%3C/svg%3E"),
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff0000'%3E%3Cpath d='M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 2h6v2h-6V6zm0 4h6v2h-6v-2zm-6 0h4v2H6v-2zm10 4h-4v-2h4v2z'/%3E%3C/svg%3E"),
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff0000'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z'/%3E%3C/svg%3E");
-            background-repeat: repeat;
-            background-size: 70px 70px, 90px 90px, 110px 110px, 130px 130px;
-            background-position: 10% 20%, 80% 40%, 30% 80%, 70% 10%;
-            mix-blend-mode: multiply;
+            z-index: 1;
+            overflow: hidden;
         }
 
+        .component {
+            position: absolute;
+            color: #b91c1c;
+            opacity: 0.12;
+            font-size: clamp(1.5rem, 5vw, 3.5rem);
+            animation: fall linear infinite;
+            user-select: none;
+            filter: drop-shadow(0 0 5px #b91c1c);
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-20vh) rotate(0deg);
+                opacity: 0.12;
+            }
+            80% {
+                opacity: 0.2;
+            }
+            100% {
+                transform: translateY(120vh) rotate(360deg);
+                opacity: 0.05;
+            }
+        }
+
+        /* Основной контент поверх фона */
         .container {
             max-width: 1280px;
             margin: 0 auto;
@@ -517,6 +532,9 @@
     </style>
 </head>
 <body>
+    <!-- Контейнер для падающих компонентов будет заполнен скриптом -->
+    <div class="falling-components" id="fallingComponents"></div>
+
     <header class="header">
         <div class="container">
             <div class="logo">HAYPC</div>
@@ -680,6 +698,67 @@
 
     <script>
         (function() {
+            // ========== ПАДАЮЩИЕ КОМПОНЕНТЫ ==========
+            function createFallingComponents() {
+                const container = document.getElementById('fallingComponents');
+                if (!container) return;
+                
+                // Очистим на всякий случай
+                container.innerHTML = '';
+                
+                // Список иконок компьютерных компонентов
+                const icons = [
+                    'fa-microchip', 'fa-memory', 'fa-hard-drive', 'fa-microchip', 
+                    'fa-tachometer-alt', 'fa-fan', 'fa-power-off', 'fa-microchip',
+                    'fa-server', 'fa-database', 'fa-sd-card', 'fa-ethernet',
+                    'fa-keyboard', 'fa-mouse', 'fa-headphones', 'fa-gamepad',
+                    'fa-computer', 'fa-laptop', 'fa-tablet', 'fa-print',
+                    'fa-plug', 'fa-bolt', 'fa-battery-full', 'fa-wifi'
+                ];
+                
+                // Количество элементов в зависимости от ширины экрана
+                const count = window.innerWidth < 600 ? 20 : 40;
+                
+                for (let i = 0; i < count; i++) {
+                    const comp = document.createElement('div');
+                    comp.className = 'component';
+                    
+                    // Случайная иконка
+                    const randomIcon = icons[Math.floor(Math.random() * icons.length)];
+                    comp.innerHTML = `<i class="fas ${randomIcon}"></i>`;
+                    
+                    // Случайное положение слева (0% - 100%)
+                    const left = Math.random() * 100;
+                    comp.style.left = left + '%';
+                    
+                    // Случайная задержка анимации (0 - 20s)
+                    const delay = Math.random() * 20;
+                    comp.style.animationDelay = delay + 's';
+                    
+                    // Случайная длительность падения (10 - 25s)
+                    const duration = 10 + Math.random() * 15;
+                    comp.style.animationDuration = duration + 's';
+                    
+                    // Случайный размер (но в пределах, уже задано в CSS)
+                    const scale = 0.8 + Math.random() * 1.2;
+                    comp.style.fontSize = (scale * 2.5) + 'rem';
+                    
+                    container.appendChild(comp);
+                }
+            }
+            
+            // Вызвать при загрузке и при изменении размера (пересоздавать при ресайзе, но не слишком часто)
+            let timeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    createFallingComponents();
+                }, 200);
+            });
+            
+            createFallingComponents();
+
+            // ========== ПЕРЕКЛЮЧЕНИЕ ЯЗЫКОВ ==========
             const translations = {
                 am: {
                     hero_title1: 'HAYPC',
@@ -848,4 +927,3 @@
     </script>
 </body>
 </html>
-```
