@@ -1,928 +1,784 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>HayPC | чёрный / красный · Компьютеры, ремонт, аксессуары</title>
-    <!-- Шрифт и иконки -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>HAYPC | черный • красный • мега-каталод</title>
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* ГЛОБАЛЬНЫЕ СБРОСЫ И ТЕМНАЯ ТЕМА */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, 'Helvetica Neue', sans-serif;
         }
-
         body {
-            font-family: 'Montserrat', sans-serif;
             background-color: #0c0c0c;
-            color: #e5e5e5;
-            line-height: 1.6;
+            color: #f0f0f0;
+            line-height: 1.5;
             overflow-x: hidden;
             position: relative;
             min-height: 100vh;
         }
-
-        /* Контейнер для падающих компонентов */
-        .falling-components {
+        /* КОНТЕЙНЕР ПАДАЮЩИХ КОМПЛЕКТУЮЩИХ (ФОН) */
+        .falling-parts {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            z-index: 0;
             pointer-events: none;
-            z-index: 1;
             overflow: hidden;
         }
-
-        .component {
+        .part-icon {
             position: absolute;
-            color: #b91c1c;
-            opacity: 0.12;
-            font-size: clamp(1.5rem, 5vw, 3.5rem);
+            color: rgba(230, 0, 0, 0.2);
+            font-size: clamp(1.2rem, 4vw, 3rem);
+            filter: drop-shadow(0 0 5px #ff000060);
             animation: fall linear infinite;
             user-select: none;
-            filter: drop-shadow(0 0 5px #b91c1c);
+            opacity: 0.7;
+            transform: rotate(0deg);
         }
-
+        .part-icon.black {
+            color: rgba(180, 180, 180, 0.15);
+            filter: drop-shadow(0 0 3px #ff000030);
+            opacity: 0.5;
+        }
         @keyframes fall {
-            0% {
-                transform: translateY(-20vh) rotate(0deg);
-                opacity: 0.12;
-            }
-            80% {
-                opacity: 0.2;
-            }
-            100% {
-                transform: translateY(120vh) rotate(360deg);
-                opacity: 0.05;
-            }
+            0% { transform: translateY(-20vh) rotate(0deg); opacity: 0.6; }
+            80% { opacity: 0.4; }
+            100% { transform: translateY(120vh) rotate(360deg); opacity: 0; }
         }
-
-        /* Основной контент поверх фона */
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 40px;
+        /* Основной контент (поверх фона) */
+        .main-content {
             position: relative;
-            z-index: 2;
-        }
-
-        /* Шапка */
-        .header {
-            background: rgba(10, 10, 10, 0.98);
-            backdrop-filter: blur(8px);
-            border-bottom: 2px solid #b91c1c;
-            padding: 16px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header .container {
+            z-index: 10;
+            background-color: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            min-height: 100vh;
             display: flex;
+            flex-direction: column;
+        }
+        /* ШАПКА */
+        .header-bar {
+            background: #0e0e0e;
+            padding: 1rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 15px;
+            border-bottom: 3px solid #d32f2f;
+            box-shadow: 0 5px 20px rgba(255, 0, 0, 0.2);
         }
-
-        .logo {
+        .logo h1 {
             font-size: 2.2rem;
+            letter-spacing: 3px;
             font-weight: 800;
-            letter-spacing: -0.02em;
-            background: linear-gradient(145deg, #fafafa, #b91c1c);
+            background: linear-gradient(45deg, #ffffff, #ff5e5e);
             -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             background-clip: text;
-            color: transparent;
+            text-shadow: 0 0 15px #ff0000aa;
         }
-
-        .lang-switch {
+        .lang-switcher {
             display: flex;
-            gap: 8px;
-            background: #1f1f1f;
-            padding: 6px 12px;
-            border-radius: 40px;
-            border: 1px solid #b91c1c;
+            gap: 0.6rem;
+            flex-wrap: wrap;
         }
-
         .lang-btn {
-            background: none;
-            border: none;
-            font-size: 1rem;
-            font-weight: 700;
-            padding: 6px 16px;
-            border-radius: 30px;
+            background: transparent;
+            border: 2px solid #5a1e1e;
+            color: #ddd;
+            font-weight: 600;
+            padding: 0.5rem 1.3rem;
+            border-radius: 40px;
             cursor: pointer;
             transition: 0.2s;
-            color: #aaa;
-        }
-
-        .lang-btn.active {
-            background: #b91c1c;
-            color: white;
-            box-shadow: 0 0 12px #b91c1c;
-        }
-
-        /* Типографика */
-        h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            line-height: 1.2;
-            letter-spacing: -0.02em;
-            margin-bottom: 1.5rem;
-            text-transform: uppercase;
-        }
-
-        h2 {
-            font-size: 2.8rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-            letter-spacing: -0.01em;
-            border-left: 8px solid #b91c1c;
-            padding-left: 24px;
-        }
-
-        h3 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        p {
-            margin-bottom: 1rem;
-            color: #b0b0b0;
-        }
-
-        .highlight {
-            color: #b91c1c;
-            font-weight: 700;
-        }
-
-        /* Hero секция */
-        .hero {
-            padding: 100px 0;
-            background: radial-gradient(circle at 10% 20%, rgba(185,28,28,0.15), transparent 40%);
-        }
-
-        .hero .container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
-        }
-
-        .hero h1 span {
-            color: #b91c1c;
-            display: block;
-            font-size: 4rem;
-        }
-
-        .hero p {
-            font-size: 1.3rem;
-            max-width: 500px;
-        }
-
-        .hero-stats {
-            display: flex;
-            gap: 50px;
-            margin-top: 40px;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.8rem;
-            font-weight: 800;
-            color: #b91c1c;
-        }
-
-        .btn {
-            display: inline-block;
-            background: #b91c1c;
-            color: white;
-            font-weight: 700;
-            padding: 14px 40px;
-            border-radius: 60px;
-            text-decoration: none;
-            margin-top: 20px;
-            border: 2px solid #b91c1c;
-            transition: 0.2s;
-            box-shadow: 0 8px 20px rgba(185,28,28,0.4);
-        }
-
-        .btn:hover {
-            background: transparent;
-            color: #b91c1c;
-        }
-
-        /* Карточки услуг */
-        .services {
-            padding: 100px 0;
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 32px;
-            margin-top: 50px;
-        }
-
-        .service-card {
-            background: rgba(20, 20, 20, 0.9);
+            font-size: 1rem;
             backdrop-filter: blur(4px);
-            padding: 40px 30px;
-            border-radius: 30px;
-            border: 1px solid #333;
-            transition: 0.3s;
-            position: relative;
-            overflow: hidden;
         }
-
-        .service-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 6px;
-            height: 100%;
-            background: #b91c1c;
-            transition: 0.3s;
-        }
-
-        .service-card:hover {
-            transform: translateY(-10px);
-            border-color: #b91c1c;
-            box-shadow: 0 20px 30px -10px rgba(185,28,28,0.5);
-        }
-
-        .service-icon {
-            font-size: 3.5rem;
-            color: #b91c1c;
-            margin-bottom: 20px;
-        }
-
-        .service-title {
-            font-size: 1.9rem;
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-
-        .service-desc {
-            color: #aaa;
-            margin-bottom: 20px;
-        }
-
-        .feature-list {
-            list-style: none;
-            margin-top: 15px;
-        }
-
-        .feature-list li {
-            margin-bottom: 8px;
-            color: #ccc;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .feature-list i {
-            color: #b91c1c;
-            width: 20px;
-        }
-
-        /* Гарантия */
-        .warranty {
-            background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
-            padding: 80px 0;
-            border-top: 2px solid #b91c1c;
-            border-bottom: 2px solid #b91c1c;
-            margin: 40px 0;
-        }
-
-        .warranty-content {
-            max-width: 900px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .warranty-icon {
-            font-size: 6rem;
-            color: #b91c1c;
-        }
-
-        .warranty h2 {
-            border: none;
-            text-align: center;
-        }
-
-        .badge {
-            display: inline-block;
-            background: #b91c1c;
+        .lang-btn.active {
+            background: #d32f2f;
+            border-color: #ff8a8a;
             color: white;
-            font-weight: 800;
-            padding: 12px 40px;
-            border-radius: 60px;
-            font-size: 1.4rem;
-            margin-top: 20px;
-            box-shadow: 0 0 20px #b91c1c;
+            box-shadow: 0 0 20px #ff0000;
         }
-
-        /* Преимущества */
-        .features {
-            padding: 80px 0;
+        .lang-btn:hover {
+            background: #a51e1e;
+            border-color: #ff5e5e;
+            color: white;
         }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
+        /* КОНТЕЙНЕР ТРЁХ ЯЗЫКОВ */
+        .lang-container {
+            flex: 1;
         }
-
-        .feature-item {
-            background: #151515;
-            padding: 30px;
-            border-radius: 24px;
-            border: 1px solid #333;
-            text-align: center;
+        .lang-version {
+            display: none;
+            padding: 2rem 5%;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
         }
-
-        .feature-item i {
-            font-size: 2.5rem;
-            color: #b91c1c;
-            margin-bottom: 20px;
+        .lang-version.active-lang {
+            display: block;
         }
-
-        /* Контакты */
-        .contact {
-            padding: 80px 0;
-            background: #0a0a0a;
-        }
-
-        .contact-info {
+        /* Вкладки внутри языка */
+        .inner-tabs {
             display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
             justify-content: center;
-            gap: 40px;
             flex-wrap: wrap;
         }
-
-        .contact-item {
+        .inner-tab-btn {
+            background: #1f1f1f;
+            border: 2px solid #6d2e2e;
+            color: #ccc;
+            font-size: 1.3rem;
+            font-weight: 700;
+            padding: 0.7rem 2.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 0 10px #330000;
+        }
+        .inner-tab-btn.active-inner {
+            background: #b71c1c;
+            border-color: #ff7b7b;
+            color: white;
+            box-shadow: 0 0 20px #ff4444;
+        }
+        .home-content, .catalog-content {
+            display: none;
+        }
+        .active-inner-content {
+            display: block;
+        }
+        /* секции */
+        section {
+            margin-bottom: 4rem;
+            background: rgba(15, 15, 15, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 40px;
+            padding: 2.5rem 2rem;
+            border: 1px solid #6a1e1e;
+            box-shadow: 0 15px 30px -10px #2b0000;
+        }
+        h2 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            margin-bottom: 1.8rem;
+            border-left: 10px solid #d32f2f;
+            padding-left: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        h2 i {
+            color: #d32f2f;
+            margin-right: 0.8rem;
+        }
+        .highlight-red {
+            color: #ff5e5e;
+            font-weight: 600;
+        }
+        .badge {
+            background: #b71c1c;
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            font-weight: 600;
+            display: inline-block;
+            font-size: 1.1rem;
+        }
+        /* сетка карточек */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 1.8rem;
+            margin-top: 2rem;
+        }
+        .product-card {
+            background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
+            border-radius: 28px;
+            padding: 1.2rem 1rem;
+            border: 1px solid #a52a2a;
+            box-shadow: 0 10px 20px rgba(180, 0, 0, 0.4);
+            transition: 0.15s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+        }
+        .product-card:hover {
+            transform: translateY(-8px);
+            border-color: #ff5252;
+            box-shadow: 0 25px 30px -10px #c62828;
+        }
+        .product-icon {
+            font-size: 2.8rem;
+            color: #d32f2f;
+            margin-bottom: 0.8rem;
+        }
+        .product-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+        .product-desc {
+            color: #bbb;
+            font-size: 0.85rem;
+            margin: 0.5rem 0;
+            flex: 1;
+        }
+        .price {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #ff3d3d;
+            text-shadow: 0 0 8px darkred;
+        }
+        .old-price {
+            text-decoration: line-through;
+            color: #777;
+            font-size: 1.1rem;
+            margin-right: 0.5rem;
+        }
+        .warranty-chip {
+            background: #2c1515;
+            border-radius: 20px;
+            padding: 0.3rem 1rem;
+            display: inline-block;
+            font-size: 0.8rem;
+            border: 1px dashed red;
+            margin-top: 0.7rem;
+            align-self: center;
+        }
+        /* сервисный блок */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.8rem;
+        }
+        .service-item {
             background: #1c1c1c;
-            padding: 20px 40px;
+            padding: 1.8rem 1.2rem;
+            border-radius: 30px;
+            text-align: center;
+            border: 1px solid #6d2e2e;
+        }
+        .service-item i {
+            font-size: 2.8rem;
+            color: #ff3d3d;
+            margin-bottom: 1rem;
+        }
+        .service-item h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+        /* преимущества */
+        .features-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+        }
+        .feature {
+            background: #231b1b;
+            padding: 2rem;
+            border-radius: 40px;
+            text-align: center;
+            flex: 1 1 200px;
+            border: 1px solid #a52a2a;
+        }
+        .feature i {
+            font-size: 3rem;
+            color: gold;
+        }
+        /* гарантия */
+        .guarantee {
+            background: #2a0f0f;
             border-radius: 60px;
-            border: 1px solid #b91c1c;
+            padding: 2rem;
             display: flex;
             align-items: center;
-            gap: 16px;
-            font-size: 1.2rem;
-        }
-
-        .contact-item i {
-            font-size: 2rem;
-            color: #b91c1c;
-        }
-
-        /* Футер */
-        .footer {
-            background: #050505;
-            padding: 40px 0;
-            border-top: 1px solid #b91c1c;
+            flex-wrap: wrap;
+            gap: 2rem;
+            border: 2px solid #aa2b2b;
+            justify-content: center;
             text-align: center;
-            color: #777;
         }
-
-        /* ========== АДАПТИВНОСТЬ ========== */
-        @media (max-width: 1024px) {
-            .container {
-                padding: 0 32px;
-            }
-            h1 {
-                font-size: 3rem;
-            }
-            h2 {
-                font-size: 2.4rem;
-            }
+        .guarantee i {
+            font-size: 4rem;
+            color: gold;
         }
-
-        @media (max-width: 900px) {
-            .hero .container {
-                grid-template-columns: 1fr;
-                text-align: center;
-                gap: 40px;
-            }
-            .hero p {
-                margin-left: auto;
-                margin-right: auto;
-            }
-            .hero-stats {
-                justify-content: center;
-            }
-            .features-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        .guarantee span {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #ff8080;
         }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 24px;
-            }
-            h1 {
-                font-size: 2.6rem;
-            }
-            h1 span {
-                font-size: 3rem !important;
-            }
-            h2 {
-                font-size: 2.2rem;
-                padding-left: 16px;
-                border-left-width: 6px;
-            }
-            .services-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 20px;
-            }
-            .service-card {
-                padding: 30px 20px;
-            }
-            .service-title {
-                font-size: 1.6rem;
-            }
-            .contact-item {
-                padding: 16px 24px;
-                font-size: 1rem;
-            }
+        /* адаптация */
+        @media (max-width: 800px) {
+            .header-bar { flex-direction: column; gap: 1rem; text-align: center; }
+            h2 { font-size: 2rem; }
+            section { padding: 1.8rem 1rem; }
         }
-
-        @media (max-width: 600px) {
-            .header .container {
-                flex-direction: column;
-                align-items: center;
-            }
-            .lang-switch {
-                align-self: center;
-            }
-            .services-grid {
-                grid-template-columns: 1fr;
-            }
-            .features-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            .hero-stats {
-                gap: 30px;
-                flex-wrap: wrap;
-            }
-            .stat-number {
-                font-size: 2.2rem;
-            }
-            .contact-info {
-                flex-direction: column;
-                align-items: center;
-                gap: 20px;
-            }
-            .contact-item {
-                width: 100%;
-                justify-content: center;
-            }
+        @media (max-width: 500px) {
+            .logo h1 { font-size: 1.8rem; }
+            .lang-btn { padding: 0.4rem 1rem; }
+            .product-card .price { font-size: 1.5rem; }
         }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 0 16px;
-            }
-            h1 {
-                font-size: 2.2rem;
-            }
-            h1 span {
-                font-size: 2.6rem !important;
-            }
-            h2 {
-                font-size: 1.8rem;
-            }
-            .btn {
-                padding: 12px 30px;
-                font-size: 0.9rem;
-            }
-            .service-card {
-                padding: 25px 16px;
-            }
-            .warranty-icon {
-                font-size: 4rem;
-            }
-            .badge {
-                font-size: 1.2rem;
-                padding: 10px 24px;
-            }
-            .footer {
-                font-size: 0.9rem;
-            }
+        .footer-note {
+            margin-top: 2rem;
+            text-align: center;
+            color: #888;
+            border-top: 1px solid #6d2e2e;
+            padding-top: 2rem;
+            font-size: 1rem;
         }
-
-        /* для очень маленьких высот */
-        @media (max-height: 500px) and (orientation: landscape) {
-            .hero {
-                padding: 50px 0;
-            }
+        .brands {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+            font-size: 2rem;
+            color: #aaa;
         }
+        .brands i { filter: grayscale(1); transition: 0.2s; }
+        .brands i:hover { filter: none; color: #ff5e5e; }
     </style>
 </head>
 <body>
-    <!-- Контейнер для падающих компонентов будет заполнен скриптом -->
-    <div class="falling-components" id="fallingComponents"></div>
+    <!-- Фоновые падающие компоненты (ещё больше) -->
+    <div class="falling-parts" id="fallingParts"></div>
 
-    <header class="header">
-        <div class="container">
-            <div class="logo">HAYPC</div>
-            <div class="lang-switch">
-                <button class="lang-btn active" data-lang="am">AM</button>
-                <button class="lang-btn" data-lang="ru">RU</button>
-                <button class="lang-btn" data-lang="en">EN</button>
+    <!-- ОСНОВНОЙ КОНТЕНТ -->
+    <div class="main-content">
+        <!-- ШАПКА -->
+        <div class="header-bar">
+            <div class="logo">
+                <h1><i class="fas fa-microchip" style="color:#d32f2f;"></i> HAYPC</h1>
+            </div>
+            <div class="lang-switcher">
+                <button class="lang-btn active" data-lang="en">🇬🇧 EN</button>
+                <button class="lang-btn" data-lang="ru">🇷🇺 RU</button>
+                <button class="lang-btn" data-lang="am">🇦🇲 AM</button>
             </div>
         </div>
-    </header>
 
-    <main>
-        <!-- Hero -->
-        <section class="hero">
-            <div class="container">
-                <div>
-                    <h1><span data-i18n="hero_title1">HAYPC</span> <span data-i18n="hero_title2">КРУЧЕ, ЧЕМ ТЕХНИКА</span></h1>
-                    <p data-i18n="hero_sub">Продажа, ремонт, кастомные сборки, аксессуары и ЖЕЛЕЗНАЯ гарантия от 6 месяцев.</p>
-                    <a href="#" class="btn" data-i18n="hero_btn">КОНСУЛЬТАЦИЯ</a>
-                    <div class="hero-stats">
-                        <div class="stat-item">
-                            <div class="stat-number">7+</div>
-                            <div data-i18n="stat_years">лет опыта</div>
+        <!-- КОНТЕЙНЕР ТРЁХ ЯЗЫКОВ -->
+        <div class="lang-container">
+            <!-- АНГЛИЙСКАЯ ВЕРСИЯ (полная) -->
+            <div id="lang-en" class="lang-version active-lang">
+                <div class="inner-tabs">
+                    <button class="inner-tab-btn active-inner" data-inner="home-en">🏠 HOME</button>
+                    <button class="inner-tab-btn" data-inner="catalog-en">📦 CATALOG</button>
+                </div>
+                <!-- Главная EN -->
+                <div id="home-en" class="home-content active-inner-content">
+                    <section>
+                        <h2><i class="fas fa-bolt"></i> HAYPC — power in every detail</h2>
+                        <p style="font-size: 1.3rem;">Welcome to <span class="highlight-red">HAYPC</span> — your reliable tech partner. We combine the hottest components and professional service.</p>
+                        <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 2rem;">
+                            <div class="badge"><i class="fas fa-check-circle"></i> since 2018</div>
+                            <div class="badge"><i class="fas fa-trophy"></i> 5000+ customers</div>
                         </div>
-                        <div class="stat-item">
-                            <div class="stat-number">3000+</div>
-                            <div data-i18n="stat_clients">клиентов</div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-cogs"></i> What we do</h2>
+                        <div class="services-grid">
+                            <div class="service-item"><i class="fas fa-desktop"></i><h3>PC sales</h3><p>Gaming / office / workstation</p></div>
+                            <div class="service-item"><i class="fas fa-tools"></i><h3>Repairs</h3><p>PC & smartphones</p></div>
+                            <div class="service-item"><i class="fas fa-paint-brush"></i><h3>Custom builds</h3><p>Unique configs</p></div>
+                            <div class="service-item"><i class="fas fa-mobile-alt"></i><h3>Tech & gadgets</h3><p>Phones, tablets, laptops</p></div>
+                            <div class="service-item"><i class="fas fa-headphones"></i><h3>Accessories</h3><p>Keyboards, mice, cables</p></div>
+                            <div class="service-item"><i class="fas fa-shield-alt"></i><h3>Warranty 6+ months</h3><p>On every service</p></div>
                         </div>
-                    </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-medal"></i> Why choose us</h2>
+                        <div class="features-grid">
+                            <div class="feature"><i class="fas fa-tachometer-alt"></i><h3>Fast service</h3><p>Repair within 24h</p></div>
+                            <div class="feature"><i class="fas fa-certificate"></i><h3>Original parts</h3><p>Only genuine</p></div>
+                            <div class="feature"><i class="fas fa-truck"></i><h3>Free delivery</h3><p>In Yerevan</p></div>
+                            <div class="feature"><i class="fas fa-credit-card"></i><h3>Installments</h3><p>Up to 12 months</p></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-handshake"></i> Top brands</h2>
+                        <div class="brands">
+                            <i class="fab fa-intel"></i> <i class="fab fa-amd"></i> <i class="fas fa-microchip"></i> NVIDIA <i class="fas fa-memory"></i> Kingston <i class="fas fa-hdd"></i> Seagate <i class="fas fa-headphones"></i> Logitech
+                        </div>
+                    </section>
                 </div>
-                <div style="text-align: center;">
-                    <!-- Красная неоновая заглушка -->
-                    <div style="background: #1a1a1a; border-radius: 40px; padding: 20px; border: 2px solid #b91c1c; box-shadow: 0 0 50px #b91c1c33;">
-                        <i class="fas fa-computer" style="font-size: 12rem; color: #b91c1c; opacity: 0.8;"></i>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Услуги (6 пунктов) -->
-        <section class="services">
-            <div class="container">
-                <h2 data-i18n="services_title">ЧТО МЫ ДЕЛАЕМ</h2>
-                <div class="services-grid">
-                    <!-- 1. Продажа компьютеров -->
-                    <div class="service-card">
-                        <div class="service-icon"><i class="fas fa-desktop"></i></div>
-                        <div class="service-title" data-i18n="s1_title">Продажа ПК</div>
-                        <div class="service-desc" data-i18n="s1_desc">Готовые системные блоки и ноутбуки для любых задач.</div>
-                        <ul class="feature-list">
-                            <li><i class="fas fa-check-circle"></i> <span data-i18n="s1_f1">Офисные / игровые / рабочие станции</span></li>
-                            <li><i class="fas fa-check-circle"></i> <span data-i18n="s1_f2">Самые свежие комплектующие</span></li>
-                        </ul>
-                    </div>
-                    <!-- 2. Ремонт -->
-                    <div class="service-card">
-                        <div class="service-icon"><i class="fas fa-tools"></i></div>
-                        <div class="service-title" data-i18n="s2_title">Ремонт</div>
-                        <div class="service-desc" data-i18n="s2_desc">Компьютеры, ноутбуки, телефоны — быстро и качественно.</div>
-                        <ul class="feature-list">
-                            <li><i class="fas fa-check-circle"></i> <span data-i18n="s2_f1">Замена деталей, чистка, пайка</span></li>
-                            <li><i class="fas fa-check-circle"></i> <span data-i18n="s2_f2">Диагностика за 0 ₽ при ремонте</span></li>
-                        </ul>
-                    </div>
-                    <!-- 3. Кастомные сборки -->
-                    <div class="service-card">
-                        <div class="service-icon"><i class="fas fa-microchip"></i></div>
-                        <div class="service-title" data-i18n="s3_title">Кастомные ПК</div>
-                        <div class="service-desc" data-i18n="s3_desc">Соберём компьютер под ваши требования и бюджет.</div>
-                        <ul class="feature-list">
-                            <li><i class="fas fa-check-circle"></i> <span data-i18n="s3_f1">Уникальный дизайн / кабель-менеджмент</span></li>
-                            <li><i class="fas fa-check-circle"></i> <span data-i18n="s3_f2">Водяное охлаждение, разгон</span></li>
-                        </ul>
-                    </div>
-                    <!-- 4. Техника (комплектующие) -->
-                    <div class="service-card">
-                        <div class="service-icon"><i class="fas fa-memory"></i></div>
-                        <div class="service-title" data-i18n="s4_title">Комплектующие</div>
-                        <div class="service-desc" data-i18n="s4_desc">Процессоры, видеокарты, материнки, БП и всё для апгрейда.</div>
-                        <ul class="feature-list">
-                            <li><i class="fas fa-check-circle"></i> <span data-i18n="s4_f1">Только оригинальные модели</span></li>
-                            <li><i class="fas fa-check-circle"></i> <span data-i18n="s4_f2">Помощь в подборе совместимости</span></li>
-                        </ul>
-                    </div>
-                    <!-- 5. Аксессуары -->
-                    <div class="service-card">
-                        <div class="service-icon"><i class="fas fa-headphones-alt"></i></div>
-                        <div class="service-title" data-i18n="s5_title">Аксессуары</div>
-                        <div class="service-desc" data-i18n="s5_desc">Мышки, клавиатуры, коврики, кабели, чехлы и многое другое.</div>
-                        <ul class="feature-list">
-                            <li><i class="fas fa-check-circle"></i> <span data-i18n="s5_f1">Игровые и офисные серии</span></li>
-                            <li><i class="fas fa-check-circle"></i> <span data-i18n="s5_f2">Бренды: Logitech, Razer, HyperX и др.</span></li>
-                        </ul>
-                    </div>
-                    <!-- 6. Супер-гарантия (от 6 мес) -->
-                    <div class="service-card" style="border: 2px solid #b91c1c;">
-                        <div class="service-icon"><i class="fas fa-shield-alt"></i></div>
-                        <div class="service-title" data-i18n="s6_title">Гарантия 6+ мес</div>
-                        <div class="service-desc" data-i18n="s6_desc">На все услуги и товары — официальная гарантия.</div>
-                        <ul class="feature-list">
-                            <li><i class="fas fa-check-circle"></i> <span data-i18n="s6_f1">На ремонт — от 6 до 24 мес</span></li>
-                            <li><i class="fas fa-check-circle"></i> <span data-i18n="s6_f2">На технику — до 3 лет</span></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Отдельный мощный блок про гарантию -->
-        <section class="warranty">
-            <div class="container warranty-content">
-                <div class="warranty-icon"><i class="fas fa-medal"></i></div>
-                <h2 data-i18n="warranty_main">ГАРАНТИЯ — НАШЕ СЛОВО</h2>
-                <p data-i18n="warranty_text" style="font-size: 1.2rem;">Минимум 6 месяцев гарантии на любую услугу или товар. Для кастомных сборок и некоторых категорий — до 2 лет. Мы уверены в качестве, поэтому подписываем официальные документы.</p>
-                <div class="badge" data-i18n="warranty_badge">6+ МЕСЯЦЕВ</div>
-            </div>
-        </section>
-
-        <!-- Преимущества (детали) -->
-        <section class="features">
-            <div class="container">
-                <h2 data-i18n="why_title">ПОЧЕМУ HAYPC</h2>
-                <div class="features-grid">
-                    <div class="feature-item">
-                        <i class="fas fa-bolt"></i>
-                        <h3 data-i18n="why1_title">Скорость</h3>
-                        <p data-i18n="why1_desc">Ремонт за 1 день, сборка за 2 дня, доставка по городу за 3 часа.</p>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-user-tie"></i>
-                        <h3 data-i18n="why2_title">Опыт 7+ лет</h3>
-                        <p data-i18n="why2_desc">Инженеры с профильным образованием и сотнями собранных ПК.</p>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-file-signature"></i>
-                        <h3 data-i18n="why3_title">Прозрачность</h3>
-                        <p data-i18n="why3_desc">Честная смета, никаких скрытых платежей, только официальная гарантия.</p>
-                    </div>
+                <!-- Каталог EN -->
+                <div id="catalog-en" class="catalog-content">
+                    <section>
+                        <h2><i class="fas fa-microchip"></i> Processors</h2>
+                        <div class="products-grid">
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">Intel Core i9-14900K</div><div class="product-desc">24 cores, 5.8GHz</div><div class="price">$649</div><div class="warranty-chip">36 mo</div></div>
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">AMD Ryzen 9 7950X3D</div><div class="product-desc">16 cores, 5.7GHz</div><div class="price">$699</div><div class="warranty-chip">36 mo</div></div>
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">Intel Core i7-13700K</div><div class="product-desc">16 cores, 5.4GHz</div><div class="price">$419</div><div class="warranty-chip">36 mo</div></div>
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">AMD Ryzen 5 7600X</div><div class="product-desc">6 cores, 5.3GHz</div><div class="price">$249</div><div class="warranty-chip">36 mo</div></div>
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">Intel Core i5-13600K</div><div class="product-desc">14 cores, 5.1GHz</div><div class="price">$319</div><div class="warranty-chip">36 mo</div></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-tv"></i> Graphics cards</h2>
+                        <div class="products-grid">
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">RTX 4090 24GB</div><div class="product-desc">ASUS ROG Strix</div><div class="price">$1899</div><div class="warranty-chip">48 mo</div></div>
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">RTX 4080 SUPER 16GB</div><div class="product-desc">MSI Gaming</div><div class="price">$1149</div><div class="warranty-chip">48 mo</div></div>
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">RX 7900 XTX 24GB</div><div class="product-desc">Sapphire Nitro</div><div class="price">$999</div><div class="warranty-chip">36 mo</div></div>
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">RTX 4060 Ti 8GB</div><div class="product-desc">Gigabyte</div><div class="price">$399</div><div class="warranty-chip">36 mo</div></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-memory"></i> RAM & Storage</h2>
+                        <div class="products-grid">
+                            <div class="product-card"><i class="fas fa-memory product-icon"></i><div class="product-title">Kingston Fury 32GB DDR5</div><div class="product-desc">6000MHz CL36</div><div class="price">$139</div><div class="warranty-chip">lifetime</div></div>
+                            <div class="product-card"><i class="fas fa-memory product-icon"></i><div class="product-title">Corsair Vengeance 64GB DDR5</div><div class="product-desc">5600MHz</div><div class="price">$249</div><div class="warranty-chip">lifetime</div></div>
+                            <div class="product-card"><i class="fas fa-hard-drive product-icon"></i><div class="product-title">Samsung 990 Pro 2TB</div><div class="product-desc">NVMe M.2</div><div class="price">$189</div><div class="warranty-chip">5 years</div></div>
+                            <div class="product-card"><i class="fas fa-hard-drive product-icon"></i><div class="product-title">WD Black 4TB HDD</div><div class="product-desc">7200rpm</div><div class="price">$129</div><div class="warranty-chip">3 years</div></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-laptop"></i> Laptops & Monitors</h2>
+                        <div class="products-grid">
+                            <div class="product-card"><i class="fas fa-laptop product-icon"></i><div class="product-title">ASUS ROG Zephyrus G14</div><div class="product-desc">Ryzen 9, RTX 4060</div><div class="price">$1599</div></div>
+                            <div class="product-card"><i class="fas fa-laptop product-icon"></i><div class="product-title">MacBook Pro 14 M3</div><div class="product-desc">18GB, 1TB</div><div class="price">$2199</div></div>
+                            <div class="product-card"><i class="fas fa-tv product-icon"></i><div class="product-title">LG 27" 4K IPS</div><div class="product-desc">27UP850N</div><div class="price">$449</div></div>
+                            <div class="product-card"><i class="fas fa-tv product-icon"></i><div class="product-title">Samsung Odyssey G7 32"</div><div class="product-desc">240Hz, curved</div><div class="price">$699</div></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-mobile-alt"></i> Smartphones</h2>
+                        <div class="products-grid">
+                            <div class="product-card"><i class="fas fa-mobile-alt product-icon"></i><div class="product-title">iPhone 15 Pro Max</div><div class="product-desc">256GB, Titanium</div><div class="price">$1249</div></div>
+                            <div class="product-card"><i class="fas fa-mobile-alt product-icon"></i><div class="product-title">Samsung S24 Ultra</div><div class="product-desc">12/512GB, S-Pen</div><div class="price">$1399</div></div>
+                            <div class="product-card"><i class="fas fa-mobile-alt product-icon"></i><div class="product-title">Google Pixel 8 Pro</div><div class="product-desc">128GB, Hazel</div><div class="price">$899</div></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-headphones"></i> Audio & Accessories</h2>
+                        <div class="products-grid">
+                            <div class="product-card"><i class="fas fa-headphones product-icon"></i><div class="product-title">Sony WH-1000XM5</div><div class="product-desc">Noise cancelling</div><div class="price">$399</div></div>
+                            <div class="product-card"><i class="fas fa-keyboard product-icon"></i><div class="product-title">Logitech MX Mechanical</div><div class="product-desc">wireless</div><div class="price">$179</div></div>
+                            <div class="product-card"><i class="fas fa-mouse product-icon"></i><div class="product-title">Razer Viper V3 Pro</div><div class="product-desc">wireless 30K</div><div class="price">$99</div></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-plug"></i> Networking & More</h2>
+                        <div class="products-grid">
+                            <div class="product-card"><i class="fas fa-wifi product-icon"></i><div class="product-title">TP-Link Archer AXE75</div><div class="product-desc">Wi-Fi 6E router</div><div class="price">$199</div></div>
+                            <div class="product-card"><i class="fas fa-chair product-icon"></i><div class="product-title">DXRacer gaming chair</div><div class="product-desc">black/red</div><div class="price">$349</div></div>
+                            <div class="product-card"><i class="fas fa-fan product-icon"></i><div class="product-title">Cooler Master liquid cooler</div><div class="product-desc">360mm RGB</div><div class="price">$139</div></div>
+                        </div>
+                    </section>
                 </div>
             </div>
-        </section>
 
-        <!-- Контакты -->
-        <section class="contact">
-            <div class="container">
-                <h2 data-i18n="contact_title">СВЯЗЬ</h2>
-                <div class="contact-info">
-                    <div class="contact-item"><i class="fas fa-map-marker-alt"></i> <span data-i18n="address">Ереван, ул. Баграмяна 22</span></div>
-                    <div class="contact-item"><i class="fas fa-phone-alt"></i> <span>+374 77 123 456</span></div>
-                    <div class="contact-item"><i class="fas fa-envelope"></i> <span>info@haypc.am</span></div>
+            <!-- РУССКАЯ ВЕРСИЯ (полная) -->
+            <div id="lang-ru" class="lang-version">
+                <div class="inner-tabs">
+                    <button class="inner-tab-btn active-inner" data-inner="home-ru">🏠 ГЛАВНАЯ</button>
+                    <button class="inner-tab-btn" data-inner="catalog-ru">📦 КАТАЛОГ</button>
+                </div>
+                <!-- Главная RU -->
+                <div id="home-ru" class="home-content active-inner-content">
+                    <section>
+                        <h2><i class="fas fa-bolt"></i> HAYPC — мощность в деталях</h2>
+                        <p style="font-size: 1.3rem;">Добро пожаловать в <span class="highlight-red">HAYPC</span> — вашего надежного техно-партнера. Мы объединяем передовые компоненты и профессиональный сервис.</p>
+                        <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 2rem;">
+                            <div class="badge"><i class="fas fa-check-circle"></i> с 2018</div>
+                            <div class="badge"><i class="fas fa-trophy"></i> 5000+ клиентов</div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-cogs"></i> Что мы делаем</h2>
+                        <div class="services-grid">
+                            <div class="service-item"><i class="fas fa-desktop"></i><h3>Продажа ПК</h3><p>Игровые / офис / станции</p></div>
+                            <div class="service-item"><i class="fas fa-tools"></i><h3>Ремонт</h3><p>Компьютеров и телефонов</p></div>
+                            <div class="service-item"><i class="fas fa-paint-brush"></i><h3>Кастомные сборки</h3><p>Уникальные конфигурации</p></div>
+                            <div class="service-item"><i class="fas fa-mobile-alt"></i><h3>Техника</h3><p>Смартфоны, планшеты, ноутбуки</p></div>
+                            <div class="service-item"><i class="fas fa-headphones"></i><h3>Аксессуары</h3><p>Клавиатуры, мыши, кабели</p></div>
+                            <div class="service-item"><i class="fas fa-shield-alt"></i><h3>Гарантия от 6 мес</h3><p>На все услуги</p></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-medal"></i> Почему выбирают нас</h2>
+                        <div class="features-grid">
+                            <div class="feature"><i class="fas fa-tachometer-alt"></i><h3>Быстрый сервис</h3><p>Ремонт за 24ч</p></div>
+                            <div class="feature"><i class="fas fa-certificate"></i><h3>Оригинальные детали</h3><p>Только оригинал</p></div>
+                            <div class="feature"><i class="fas fa-truck"></i><h3>Бесплатная доставка</h3><p>По Еревану</p></div>
+                            <div class="feature"><i class="fas fa-credit-card"></i><h3>Рассрочка</h3><p>До 12 месяцев</p></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-handshake"></i> Лучшие бренды</h2>
+                        <div class="brands">
+                            <i class="fab fa-intel"></i> <i class="fab fa-amd"></i> <i class="fas fa-microchip"></i> NVIDIA <i class="fas fa-memory"></i> Kingston <i class="fas fa-hdd"></i> Seagate <i class="fas fa-headphones"></i> Logitech
+                        </div>
+                    </section>
+                </div>
+                <!-- Каталог RU -->
+                <div id="catalog-ru" class="catalog-content">
+                    <section>
+                        <h2><i class="fas fa-microchip"></i> Процессоры</h2>
+                        <div class="products-grid">
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">Intel Core i9-14900K</div><div class="product-desc">24 ядра, 5.8ГГц</div><div class="price">$649</div><div class="warranty-chip">36 мес</div></div>
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">AMD Ryzen 9 7950X3D</div><div class="product-desc">16 ядер, 5.7ГГц</div><div class="price">$699</div><div class="warranty-chip">36 мес</div></div>
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">Intel Core i7-13700K</div><div class="product-desc">16 ядер, 5.4ГГц</div><div class="price">$419</div><div class="warranty-chip">36 мес</div></div>
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">AMD Ryzen 5 7600X</div><div class="product-desc">6 ядер, 5.3ГГц</div><div class="price">$249</div><div class="warranty-chip">36 мес</div></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-tv"></i> Видеокарты</h2>
+                        <div class="products-grid">
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">RTX 4090 24GB</div><div class="product-desc">ASUS ROG Strix</div><div class="price">$1899</div><div class="warranty-chip">48 мес</div></div>
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">RTX 4080 SUPER 16GB</div><div class="product-desc">MSI Gaming</div><div class="price">$1149</div><div class="warranty-chip">48 мес</div></div>
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">RX 7900 XTX 24GB</div><div class="product-desc">Sapphire Nitro</div><div class="price">$999</div><div class="warranty-chip">36 мес</div></div>
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">RTX 4060 Ti 8GB</div><div class="product-desc">Gigabyte</div><div class="price">$399</div><div class="warranty-chip">36 мес</div></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-memory"></i> ОЗУ и накопители</h2>
+                        <div class="products-grid">
+                            <div class="product-card"><i class="fas fa-memory product-icon"></i><div class="product-title">Kingston Fury 32GB DDR5</div><div class="product-desc">6000MHz CL36</div><div class="price">$139</div><div class="warranty-chip">пожизненно</div></div>
+                            <div class="product-card"><i class="fas fa-memory product-icon"></i><div class="product-title">Corsair Vengeance 64GB DDR5</div><div class="product-desc">5600MHz</div><div class="price">$249</div><div class="warranty-chip">пожизненно</div></div>
+                            <div class="product-card"><i class="fas fa-hard-drive product-icon"></i><div class="product-title">Samsung 990 Pro 2TB</div><div class="product-desc">NVMe M.2</div><div class="price">$189</div><div class="warranty-chip">5 лет</div></div>
+                            <div class="product-card"><i class="fas fa-hard-drive product-icon"></i><div class="product-title">WD Black 4TB HDD</div><div class="product-desc">7200rpm</div><div class="price">$129</div><div class="warranty-chip">3 года</div></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-laptop"></i> Ноутбуки и мониторы</h2>
+                        <div class="products-grid">
+                            <div class="product-card"><i class="fas fa-laptop product-icon"></i><div class="product-title">ASUS ROG Zephyrus G14</div><div class="product-desc">Ryzen 9, RTX 4060</div><div class="price">$1599</div></div>
+                            <div class="product-card"><i class="fas fa-laptop product-icon"></i><div class="product-title">MacBook Pro 14 M3</div><div class="product-desc">18GB, 1TB</div><div class="price">$2199</div></div>
+                            <div class="product-card"><i class="fas fa-tv product-icon"></i><div class="product-title">LG 27" 4K IPS</div><div class="product-desc">27UP850N</div><div class="price">$449</div></div>
+                            <div class="product-card"><i class="fas fa-tv product-icon"></i><div class="product-title">Samsung Odyssey G7 32"</div><div class="product-desc">240Hz, curved</div><div class="price">$699</div></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-mobile-alt"></i> Смартфоны</h2>
+                        <div class="products-grid">
+                            <div class="product-card"><i class="fas fa-mobile-alt product-icon"></i><div class="product-title">iPhone 15 Pro Max</div><div class="product-desc">256GB, титан</div><div class="price">$1249</div></div>
+                            <div class="product-card"><i class="fas fa-mobile-alt product-icon"></i><div class="product-title">Samsung S24 Ultra</div><div class="product-desc">12/512GB, S-Pen</div><div class="price">$1399</div></div>
+                            <div class="product-card"><i class="fas fa-mobile-alt product-icon"></i><div class="product-title">Google Pixel 8 Pro</div><div class="product-desc">128GB</div><div class="price">$899</div></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-headphones"></i> Аудио и аксессуары</h2>
+                        <div class="products-grid">
+                            <div class="product-card"><i class="fas fa-headphones product-icon"></i><div class="product-title">Sony WH-1000XM5</div><div class="product-desc">шумоподавление</div><div class="price">$399</div></div>
+                            <div class="product-card"><i class="fas fa-keyboard product-icon"></i><div class="product-title">Logitech MX Mechanical</div><div class="product-desc">беспроводная</div><div class="price">$179</div></div>
+                            <div class="product-card"><i class="fas fa-mouse product-icon"></i><div class="product-title">Razer Viper V3 Pro</div><div class="product-desc">30K DPI</div><div class="price">$99</div></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-plug"></i> Сети и другое</h2>
+                        <div class="products-grid">
+                            <div class="product-card"><i class="fas fa-wifi product-icon"></i><div class="product-title">TP-Link Archer AXE75</div><div class="product-desc">Wi-Fi 6E роутер</div><div class="price">$199</div></div>
+                            <div class="product-card"><i class="fas fa-chair product-icon"></i><div class="product-title">DXRacer кресло</div><div class="product-desc">черное/красное</div><div class="price">$349</div></div>
+                            <div class="product-card"><i class="fas fa-fan product-icon"></i><div class="product-title">Cooler Master жидкостное охлаждение</div><div class="product-desc">360mm RGB</div><div class="price">$139</div></div>
+                        </div>
+                    </section>
                 </div>
             </div>
-        </section>
-    </main>
 
-    <footer class="footer">
-        <div class="container">
-            <p>© 2025 HayPC | <span data-i18n="footer">Все права защищены. Железо в крови.</span></p>
+            <!-- АРМЯНСКАЯ ВЕРСИЯ (полная) - теперь работает! -->
+            <div id="lang-am" class="lang-version">
+                <div class="inner-tabs">
+                    <button class="inner-tab-btn active-inner" data-inner="home-am">🏠 ԳԼԽԱՎՈՐ</button>
+                    <button class="inner-tab-btn" data-inner="catalog-am">📦 ԿԱՏԱԼՈԳ</button>
+                </div>
+                <!-- Главная AM -->
+                <div id="home-am" class="home-content active-inner-content">
+                    <section>
+                        <h2><i class="fas fa-bolt"></i> HAYPC — հզորություն ամեն դետալում</h2>
+                        <p style="font-size: 1.3rem;">Բարի գալուստ <span class="highlight-red">HAYPC</span> — Ձեր վստահելի տեխնոլոգիական գործընկերը: Մենք միավորում ենք թեժ բաղադրիչներն ու պրոֆեսիոնալ սպասարկումը:</p>
+                        <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 2rem;">
+                            <div class="badge"><i class="fas fa-check-circle"></i> 2018-ից</div>
+                            <div class="badge"><i class="fas fa-trophy"></i> 5000+ հաճախորդ</div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-cogs"></i> Մեր ծառայությունները</h2>
+                        <div class="services-grid">
+                            <div class="service-item"><i class="fas fa-desktop"></i><h3>Համակարգիչների վաճառք</h3><p>Խաղային / գրասենյակային</p></div>
+                            <div class="service-item"><i class="fas fa-tools"></i><h3>Վերանորոգում</h3><p>Համակարգիչներ, հեռախոսներ</p></div>
+                            <div class="service-item"><i class="fas fa-paint-brush"></i><h3>Պատվերով կառուցում</h3><p>Անհատական կոնֆիգուրացիաներ</p></div>
+                            <div class="service-item"><i class="fas fa-mobile-alt"></i><h3>Տեխնիկա</h3><p>Սմարթֆոններ, պլանշետներ, նոթբուքեր</p></div>
+                            <div class="service-item"><i class="fas fa-headphones"></i><h3>Աքսեսուարներ</h3><p>Ստեղնաշարեր, մկներ, լարեր</p></div>
+                            <div class="service-item"><i class="fas fa-shield-alt"></i><h3>Երաշխիք 6+ ամիս</h3><p>Բոլոր ծառայությունների համար</p></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-medal"></i> Ինչու ընտրել մեզ</h2>
+                        <div class="features-grid">
+                            <div class="feature"><i class="fas fa-tachometer-alt"></i><h3>Արագ սպասարկում</h3><p>Վերանորոգում 24ժ-ում</p></div>
+                            <div class="feature"><i class="fas fa-certificate"></i><h3>Օրիգինալ դետալներ</h3><p>Միայն վավերական</p></div>
+                            <div class="feature"><i class="fas fa-truck"></i><h3>Անվճար առաքում</h3><p>Երևանում</p></div>
+                            <div class="feature"><i class="fas fa-credit-card"></i><h3>Ապառիկ</h3><p>Մինչև 12 ամիս</p></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-handshake"></i> Լավագույն բրենդները</h2>
+                        <div class="brands">
+                            <i class="fab fa-intel"></i> <i class="fab fa-amd"></i> <i class="fas fa-microchip"></i> NVIDIA <i class="fas fa-memory"></i> Kingston <i class="fas fa-hdd"></i> Seagate <i class="fas fa-headphones"></i> Logitech
+                        </div>
+                    </section>
+                </div>
+                <!-- Каталог AM (полностью переведён) -->
+                <div id="catalog-am" class="catalog-content">
+                    <section>
+                        <h2><i class="fas fa-microchip"></i> Պրոցեսորներ</h2>
+                        <div class="products-grid">
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">Intel Core i9-14900K</div><div class="product-desc">24 միջուկ, 5.8ԳՀց</div><div class="price">$649</div><div class="warranty-chip">36 ամիս</div></div>
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">AMD Ryzen 9 7950X3D</div><div class="product-desc">16 միջուկ, 5.7ԳՀց</div><div class="price">$699</div><div class="warranty-chip">36 ամիս</div></div>
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">Intel Core i7-13700K</div><div class="product-desc">16 միջուկ, 5.4ԳՀց</div><div class="price">$419</div><div class="warranty-chip">36 ամիս</div></div>
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">AMD Ryzen 5 7600X</div><div class="product-desc">6 միջուկ, 5.3ԳՀց</div><div class="price">$249</div><div class="warranty-chip">36 ամիս</div></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-tv"></i> Վիդեոքարտեր</h2>
+                        <div class="products-grid">
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">RTX 4090 24GB</div><div class="product-desc">ASUS ROG Strix</div><div class="price">$1899</div><div class="warranty-chip">48 ամիս</div></div>
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">RTX 4080 SUPER 16GB</div><div class="product-desc">MSI Gaming</div><div class="price">$1149</div><div class="warranty-chip">48 ամիս</div></div>
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">RX 7900 XTX 24GB</div><div class="product-desc">Sapphire Nitro</div><div class="price">$999</div><div class="warranty-chip">36 ամիս</div></div>
+                            <div class="product-card"><i class="fas fa-microchip product-icon"></i><div class="product-title">RTX 4060 Ti 8GB</div><div class="product-desc">Gigabyte</div><div class="price">$399</div><div class="warranty-chip">36 ամիս</div></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-memory"></i> Օպերատիվ հիշողություն և պահեստ</h2>
+                        <div class="products-grid">
+                            <div class="product-card"><i class="fas fa-memory product-icon"></i><div class="product-title">Kingston Fury 32GB DDR5</div><div class="product-desc">6000MHz CL36</div><div class="price">$139</div><div class="warranty-chip">ցմահ</div></div>
+                            <div class="product-card"><i class="fas fa-memory product-icon"></i><div class="product-title">Corsair Vengeance 64GB DDR5</div><div class="product-desc">5600MHz</div><div class="price">$249</div><div class="warranty-chip">ցմահ</div></div>
+                            <div class="product-card"><i class="fas fa-hard-drive product-icon"></i><div class="product-title">Samsung 990 Pro 2TB</div><div class="product-desc">NVMe M.2</div><div class="price">$189</div><div class="warranty-chip">5 տարի</div></div>
+                            <div class="product-card"><i class="fas fa-hard-drive product-icon"></i><div class="product-title">WD Black 4TB HDD</div><div class="product-desc">7200rpm</div><div class="price">$129</div><div class="warranty-chip">3 տարի</div></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-laptop"></i> Նոթբուքեր և մոնիտորներ</h2>
+                        <div class="products-grid">
+                            <div class="product-card"><i class="fas fa-laptop product-icon"></i><div class="product-title">ASUS ROG Zephyrus G14</div><div class="product-desc">Ryzen 9, RTX 4060</div><div class="price">$1599</div></div>
+                            <div class="product-card"><i class="fas fa-laptop product-icon"></i><div class="product-title">MacBook Pro 14 M3</div><div class="product-desc">18GB, 1TB</div><div class="price">$2199</div></div>
+                            <div class="product-card"><i class="fas fa-tv product-icon"></i><div class="product-title">LG 27" 4K IPS</div><div class="product-desc">27UP850N</div><div class="price">$449</div></div>
+                            <div class="product-card"><i class="fas fa-tv product-icon"></i><div class="product-title">Samsung Odyssey G7 32"</div><div class="product-desc">240Hz, կոր</div><div class="price">$699</div></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-mobile-alt"></i> Սմարթֆոններ</h2>
+                        <div class="products-grid">
+                            <div class="product-card"><i class="fas fa-mobile-alt product-icon"></i><div class="product-title">iPhone 15 Pro Max</div><div class="product-desc">256GB, տիտան</div><div class="price">$1249</div></div>
+                            <div class="product-card"><i class="fas fa-mobile-alt product-icon"></i><div class="product-title">Samsung S24 Ultra</div><div class="product-desc">12/512GB, S-Pen</div><div class="price">$1399</div></div>
+                            <div class="product-card"><i class="fas fa-mobile-alt product-icon"></i><div class="product-title">Google Pixel 8 Pro</div><div class="product-desc">128GB</div><div class="price">$899</div></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-headphones"></i> Աուդիո և աքսեսուարներ</h2>
+                        <div class="products-grid">
+                            <div class="product-card"><i class="fas fa-headphones product-icon"></i><div class="product-title">Sony WH-1000XM5</div><div class="product-desc">աղմուկի մեկուսացում</div><div class="price">$399</div></div>
+                            <div class="product-card"><i class="fas fa-keyboard product-icon"></i><div class="product-title">Logitech MX Mechanical</div><div class="product-desc">անլար</div><div class="price">$179</div></div>
+                            <div class="product-card"><i class="fas fa-mouse product-icon"></i><div class="product-title">Razer Viper V3 Pro</div><div class="product-desc">30K DPI</div><div class="price">$99</div></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2><i class="fas fa-plug"></i> Ցանցային սարքեր և այլն</h2>
+                        <div class="products-grid">
+                            <div class="product-card"><i class="fas fa-wifi product-icon"></i><div class="product-title">TP-Link Archer AXE75</div><div class="product-desc">Wi-Fi 6E router</div><div class="price">$199</div></div>
+                            <div class="product-card"><i class="fas fa-chair product-icon"></i><div class="product-title">DXRacer խաղային աթոռ</div><div class="product-desc">սև/կարմիր</div><div class="price">$349</div></div>
+                            <div class="product-card"><i class="fas fa-fan product-icon"></i><div class="product-title">Cooler Master հեղուկ սառեցում</div><div class="product-desc">360mm RGB</div><div class="price">$139</div></div>
+                        </div>
+                    </section>
+                </div>
+            </div>
         </div>
-    </footer>
+
+        <!-- ПОДВАЛ -->
+        <div class="footer-note">
+            <i class="fas fa-copyright"></i> HAYPC 2025 | <i class="fas fa-tools"></i> BLACK & RED | гарантия ≥6м
+        </div>
+    </div>
 
     <script>
         (function() {
-            // ========== ПАДАЮЩИЕ КОМПОНЕНТЫ ==========
-            function createFallingComponents() {
-                const container = document.getElementById('fallingComponents');
-                if (!container) return;
-                
-                // Очистим на всякий случай
-                container.innerHTML = '';
-                
-                // Список иконок компьютерных компонентов
-                const icons = [
-                    'fa-microchip', 'fa-memory', 'fa-hard-drive', 'fa-microchip', 
-                    'fa-tachometer-alt', 'fa-fan', 'fa-power-off', 'fa-microchip',
-                    'fa-server', 'fa-database', 'fa-sd-card', 'fa-ethernet',
-                    'fa-keyboard', 'fa-mouse', 'fa-headphones', 'fa-gamepad',
-                    'fa-computer', 'fa-laptop', 'fa-tablet', 'fa-print',
-                    'fa-plug', 'fa-bolt', 'fa-battery-full', 'fa-wifi'
-                ];
-                
-                // Количество элементов в зависимости от ширины экрана
-                const count = window.innerWidth < 600 ? 20 : 40;
-                
-                for (let i = 0; i < count; i++) {
-                    const comp = document.createElement('div');
-                    comp.className = 'component';
-                    
-                    // Случайная иконка
-                    const randomIcon = icons[Math.floor(Math.random() * icons.length)];
-                    comp.innerHTML = `<i class="fas ${randomIcon}"></i>`;
-                    
-                    // Случайное положение слева (0% - 100%)
-                    const left = Math.random() * 100;
-                    comp.style.left = left + '%';
-                    
-                    // Случайная задержка анимации (0 - 20s)
-                    const delay = Math.random() * 20;
-                    comp.style.animationDelay = delay + 's';
-                    
-                    // Случайная длительность падения (10 - 25s)
-                    const duration = 10 + Math.random() * 15;
-                    comp.style.animationDuration = duration + 's';
-                    
-                    // Случайный размер (но в пределах, уже задано в CSS)
-                    const scale = 0.8 + Math.random() * 1.2;
-                    comp.style.fontSize = (scale * 2.5) + 'rem';
-                    
-                    container.appendChild(comp);
-                }
+            // Падающие детали (100+ штук)
+            const fallingContainer = document.getElementById('fallingParts');
+            const icons = [
+                'fa-microchip', 'fa-memory', 'fa-hard-drive', 'fa-computer', 
+                'fa-microchip', 'fa-microchip', 'fa-hard-drive', 'fa-memory',
+                'fa-cpu', 'fa-sd-card', 'fa-server', 'fa-ethernet',
+                'fa-bolt', 'fa-fan', 'fa-keyboard', 'fa-mouse',
+                'fa-plug', 'fa-wifi', 'fa-headphones', 'fa-mobile-alt'
+            ];
+            for (let i = 0; i < 120; i++) {
+                const part = document.createElement('i');
+                const randomIcon = icons[Math.floor(Math.random() * icons.length)];
+                part.className = `fas ${randomIcon} part-icon ${Math.random() > 0.5 ? 'black' : ''}`;
+                const left = Math.random() * 100;
+                const duration = 7 + Math.random() * 18;
+                const delay = Math.random() * 15;
+                part.style.left = left + '%';
+                part.style.animation = `fall ${duration}s linear ${delay}s infinite`;
+                part.style.fontSize = (0.8 + Math.random() * 2.8) + 'rem';
+                part.style.opacity = 0.15 + Math.random() * 0.3;
+                fallingContainer.appendChild(part);
             }
-            
-            // Вызвать при загрузке и при изменении размера (пересоздавать при ресайзе, но не слишком часто)
-            let timeout;
-            window.addEventListener('resize', () => {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => {
-                    createFallingComponents();
-                }, 200);
-            });
-            
-            createFallingComponents();
 
-            // ========== ПЕРЕКЛЮЧЕНИЕ ЯЗЫКОВ ==========
-            const translations = {
-                am: {
-                    hero_title1: 'HAYPC',
-                    hero_title2: 'ՏԵԽՆԻԿԱՅԻՑ ԱՎԵԼԻՆ',
-                    hero_sub: 'Վաճառք, վերանորոգում, պատվերով հավաքում, աքսեսուարներ և ԵՐԱՇԽԻՔ 6 ամսից',
-                    hero_btn: 'ԽՈՐՀՐԴԱՏՎՈՒԹՅՈՒՆ',
-                    stat_years: 'տարվա փորձ',
-                    stat_clients: 'հաճախորդ',
-                    services_title: 'ԻՆՉ ԵՆՔ ԱՌԱՋԱՐԿՈՒՄ',
-                    s1_title: 'Համակարգիչների վաճառք',
-                    s1_desc: 'Պատրաստի համակարգիչներ ցանկացած նպատակի համար:',
-                    s1_f1: 'Գրասենյակային / խաղային / աշխատանքային',
-                    s1_f2: 'Թարմ բաղադրիչներ',
-                    s2_title: 'Վերանորոգում',
-                    s2_desc: 'Համակարգիչներ, նոթբուքեր, հեռախոսներ',
-                    s2_f1: 'Դետալների փոխարինում, մաքրում, զոդում',
-                    s2_f2: 'Ախտորոշումը անվճար է վերանորոգման դեպքում',
-                    s3_title: 'Պատվերով համակարգիչներ',
-                    s3_desc: 'Հավաքում ենք ձեր պահանջներով և բյուջեով',
-                    s3_f1: 'Յուրահատուկ դիզայն / մալուխների կառավարում',
-                    s3_f2: 'Ջրային հովացում, օվերքլոկինգ',
-                    s4_title: 'Բաղադրիչներ',
-                    s4_desc: 'Պրոցեսորներ, վիդեոքարտեր, մայրական տախտակներ',
-                    s4_f1: 'Միայն օրիգինալ մոդելներ',
-                    s4_f2: 'Համատեղելիության ընտրություն',
-                    s5_title: 'Աքսեսուարներ',
-                    s5_desc: 'Մկներ, ստեղնաշարեր, պայուսակներ, մալուխներ',
-                    s5_f1: 'Խաղային և գրասենյակային շարքեր',
-                    s5_f2: 'Logitech, Razer, HyperX և այլն',
-                    s6_title: 'Երաշխիք 6+ ամիս',
-                    s6_desc: 'Պաշտոնական երաշխիք բոլոր ծառայությունների և ապրանքների վրա',
-                    s6_f1: 'Վերանորոգման վրա՝ 6-24 ամիս',
-                    s6_f2: 'Տեխնիկայի վրա՝ մինչև 3 տարի',
-                    warranty_main: 'ԵՐԱՇԽԻՔԸ ՄԵՐ ԽՈՍՔՆ Է',
-                    warranty_text: 'Նվազագույնը 6 ամիս երաշխիք ցանկացած ծառայության կամ ապրանքի համար: Պատվերով հավաքումների համար՝ մինչև 2 տարի:',
-                    warranty_badge: '6+ ԱՄԻՍ',
-                    why_title: 'ԻՆՉՈՒ HAYPC',
-                    why1_title: 'Արագություն',
-                    why1_desc: 'Վերանորոգում 1 օրում, հավաքում 2 օրում, առաքում 3 ժամում',
-                    why2_title: '7+ տարվա փորձ',
-                    why2_desc: 'Ինժեներներ համապատասխան կրթությամբ',
-                    why3_title: 'Թափանցիկություն',
-                    why3_desc: 'Ազնիվ նախահաշիվ, թաքնված վճարներ չկան',
-                    contact_title: 'ԿԱՊ',
-                    address: 'Երևան, Բաղրամյան 22',
-                    footer: 'Բոլոր իրավունքները պաշտպանված են:'
-                },
-                ru: {
-                    hero_title1: 'HAYPC',
-                    hero_title2: 'КРУЧЕ, ЧЕМ ТЕХНИКА',
-                    hero_sub: 'Продажа, ремонт, кастомные сборки, аксессуары и ЖЕЛЕЗНАЯ гарантия от 6 месяцев.',
-                    hero_btn: 'КОНСУЛЬТАЦИЯ',
-                    stat_years: 'лет опыта',
-                    stat_clients: 'клиентов',
-                    services_title: 'ЧТО МЫ ДЕЛАЕМ',
-                    s1_title: 'Продажа ПК',
-                    s1_desc: 'Готовые системные блоки и ноутбуки для любых задач.',
-                    s1_f1: 'Офисные / игровые / рабочие станции',
-                    s1_f2: 'Самые свежие комплектующие',
-                    s2_title: 'Ремонт',
-                    s2_desc: 'Компьютеры, ноутбуки, телефоны — быстро и качественно.',
-                    s2_f1: 'Замена деталей, чистка, пайка',
-                    s2_f2: 'Диагностика за 0 ₽ при ремонте',
-                    s3_title: 'Кастомные ПК',
-                    s3_desc: 'Соберём компьютер под ваши требования и бюджет.',
-                    s3_f1: 'Уникальный дизайн / кабель-менеджмент',
-                    s3_f2: 'Водяное охлаждение, разгон',
-                    s4_title: 'Комплектующие',
-                    s4_desc: 'Процессоры, видеокарты, материнки, БП и всё для апгрейда.',
-                    s4_f1: 'Только оригинальные модели',
-                    s4_f2: 'Помощь в подборе совместимости',
-                    s5_title: 'Аксессуары',
-                    s5_desc: 'Мышки, клавиатуры, коврики, кабели, чехлы и многое другое.',
-                    s5_f1: 'Игровые и офисные серии',
-                    s5_f2: 'Бренды: Logitech, Razer, HyperX и др.',
-                    s6_title: 'Гарантия 6+ мес',
-                    s6_desc: 'На все услуги и товары — официальная гарантия.',
-                    s6_f1: 'На ремонт — от 6 до 24 мес',
-                    s6_f2: 'На технику — до 3 лет',
-                    warranty_main: 'ГАРАНТИЯ — НАШЕ СЛОВО',
-                    warranty_text: 'Минимум 6 месяцев гарантии на любую услугу или товар. Для кастомных сборок и некоторых категорий — до 2 лет.',
-                    warranty_badge: '6+ МЕСЯЦЕВ',
-                    why_title: 'ПОЧЕМУ HAYPC',
-                    why1_title: 'Скорость',
-                    why1_desc: 'Ремонт за 1 день, сборка за 2 дня, доставка по городу за 3 часа.',
-                    why2_title: 'Опыт 7+ лет',
-                    why2_desc: 'Инженеры с профильным образованием и сотнями собранных ПК.',
-                    why3_title: 'Прозрачность',
-                    why3_desc: 'Честная смета, никаких скрытых платежей.',
-                    contact_title: 'СВЯЗЬ',
-                    address: 'Ереван, ул. Баграмяна 22',
-                    footer: 'Все права защищены. Железо в крови.'
-                },
-                en: {
-                    hero_title1: 'HAYPC',
-                    hero_title2: 'BEYOND HARDWARE',
-                    hero_sub: 'Sales, repairs, custom builds, accessories and SOLID warranty from 6 months.',
-                    hero_btn: 'FREE CONSULT',
-                    stat_years: 'years exp',
-                    stat_clients: 'clients',
-                    services_title: 'OUR SERVICES',
-                    s1_title: 'Sell PCs',
-                    s1_desc: 'Ready-made desktops & laptops for any purpose.',
-                    s1_f1: 'Office / Gaming / Workstations',
-                    s1_f2: 'Latest-gen components',
-                    s2_title: 'Repairs',
-                    s2_desc: 'Computers, laptops, phones — fast & reliable.',
-                    s2_f1: 'Parts replacement, cleaning, soldering',
-                    s2_f2: 'Free diagnostics with repair',
-                    s3_title: 'Custom PCs',
-                    s3_desc: 'We build your dream machine.',
-                    s3_f1: 'Unique design / cable management',
-                    s3_f2: 'Water cooling, overclocking',
-                    s4_title: 'Hardware',
-                    s4_desc: 'CPUs, GPUs, motherboards, PSUs and more.',
-                    s4_f1: 'Only genuine models',
-                    s4_f2: 'Compatibility check',
-                    s5_title: 'Accessories',
-                    s5_desc: 'Mice, keyboards, mats, cables, cases.',
-                    s5_f1: 'Gaming & office series',
-                    s5_f2: 'Brands: Logitech, Razer, HyperX',
-                    s6_title: 'Warranty 6+ mo',
-                    s6_desc: 'Official warranty on all services & goods.',
-                    s6_f1: 'On repairs — 6 to 24 months',
-                    s6_f2: 'On hardware — up to 3 years',
-                    warranty_main: 'WARRANTY IS OUR WORD',
-                    warranty_text: 'Minimum 6 months warranty on any service or product. For custom builds up to 2 years.',
-                    warranty_badge: '6+ MONTHS',
-                    why_title: 'WHY HAYPC',
-                    why1_title: 'Speed',
-                    why1_desc: 'Repair in 1 day, build in 2 days, delivery in 3 hours.',
-                    why2_title: '7+ years exp',
-                    why2_desc: 'Certified engineers, hundreds of builds.',
-                    why3_title: 'Transparency',
-                    why3_desc: 'No hidden fees, honest estimates.',
-                    contact_title: 'CONTACT',
-                    address: 'Yerevan, Baghramyan 22',
-                    footer: 'All rights reserved. Hardware in blood.'
-                }
-            };
-
-            const elements = document.querySelectorAll('[data-i18n]');
+            // Переключение языков
             const langBtns = document.querySelectorAll('.lang-btn');
+            const langVersions = document.querySelectorAll('.lang-version');
 
-            function setLang(lang) {
-                if (!translations[lang]) return;
-                elements.forEach(el => {
-                    const key = el.dataset.i18n;
-                    if (translations[lang][key]) {
-                        el.innerHTML = translations[lang][key];
-                    }
-                });
-                langBtns.forEach(btn => {
-                    btn.classList.toggle('active', btn.dataset.lang === lang);
-                });
-                localStorage.setItem('haypc_lang', lang);
+            function switchLang(lang) {
+                langVersions.forEach(el => el.classList.remove('active-lang'));
+                langBtns.forEach(btn => btn.classList.remove('active'));
+
+                const selectedVersion = document.getElementById(`lang-${lang}`);
+                if (selectedVersion) selectedVersion.classList.add('active-lang');
+
+                const activeBtn = Array.from(langBtns).find(btn => btn.dataset.lang === lang);
+                if (activeBtn) activeBtn.classList.add('active');
             }
 
             langBtns.forEach(btn => {
-                btn.addEventListener('click', () => setLang(btn.dataset.lang));
+                btn.addEventListener('click', (e) => {
+                    switchLang(e.currentTarget.dataset.lang);
+                });
             });
 
-            const saved = localStorage.getItem('haypc_lang') || 'ru';
-            setLang(saved);
+            // Функция настройки внутренних вкладок для конкретного языка
+            function setupInnerTabs(lang) {
+                const container = document.getElementById(`lang-${lang}`);
+                if (!container) return;
+                const tabs = container.querySelectorAll('.inner-tab-btn');
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        const targetId = e.currentTarget.dataset.inner; // например "home-en"
+                        // Убираем active у всех кнопок в этом контейнере
+                        container.querySelectorAll('.inner-tab-btn').forEach(btn => btn.classList.remove('active-inner'));
+                        e.currentTarget.classList.add('active-inner');
+                        // Скрываем все контенты в этом контейнере
+                        const homeDiv = container.querySelector('.home-content');
+                        const catalogDiv = container.querySelector('.catalog-content');
+                        if (homeDiv) homeDiv.classList.remove('active-inner-content');
+                        if (catalogDiv) catalogDiv.classList.remove('active-inner-content');
+                        // Показываем нужный
+                        const activeContent = container.querySelector(`#${targetId}`);
+                        if (activeContent) activeContent.classList.add('active-inner-content');
+                    });
+                });
+            }
+
+            // Инициализация для всех языков
+            setupInnerTabs('en');
+            setupInnerTabs('ru');
+            setupInnerTabs('am');
+
+            // Начальный язык - английский
+            switchLang('en');
         })();
     </script>
 </body>
